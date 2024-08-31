@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -99,7 +100,10 @@ fun PokemonDetailsScreen(
                             ),
                             enter = scaleIn(),
                             exit = scaleOut(),
-                            animatedVisibilityScope = animatedVisibilityScope
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            clipInOverlayDuringTransition = OverlayClip(
+                                RoundedCornerShape(16.dp)
+                            )
                         ),
                     painter = painterResource(
                         id = selectedPokemon.types.firstOrNull()?.background.orZero()

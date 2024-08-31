@@ -67,7 +67,10 @@ fun PokemonCard(
                             rememberSharedContentState(key = "${pokemon.id}/${pokemon.types.firstOrNull()}/background"),
                             enter = scaleIn(),
                             exit = scaleOut(),
-                            animatedVisibilityScope = animatedVisibilityScope
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            clipInOverlayDuringTransition = OverlayClip(
+                                RoundedCornerShape(16.dp)
+                            )
                         ),
                     painter = painterResource(pokemon.types.first().background),
                     contentDescription = "Pokemon Type Background Image",
