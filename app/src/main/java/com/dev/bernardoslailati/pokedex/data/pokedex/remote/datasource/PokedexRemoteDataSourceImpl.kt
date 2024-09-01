@@ -5,7 +5,7 @@ import com.dev.bernardoslailati.pokedex.data.pokedex.remote.service.PokedexApiSe
 
 class PokedexRemoteDataSourceImpl(private val api: PokedexApiService) : PokedexRemoteDataSource {
 
-    override suspend fun fetchPokemon(id: Int): PokemonApiModel {
+    override suspend fun fetchPokemon(id: Int): PokemonApiModel? {
         return api.fetchPokemon(id)
     }
 

@@ -1,6 +1,5 @@
 package com.dev.bernardoslailati.pokedex.feature.pokedex.screen
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -16,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.dev.bernardoslailati.pokedex.domain.pokedex.mapper.toPresentation
 import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonModel
+import com.dev.bernardoslailati.pokedex.feature.pokedex.screen.component.PokemonCard
 import okhttp3.internal.toImmutableList
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -29,13 +29,15 @@ fun PokemonListScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize().padding(top = 16.dp)
+        modifier = modifier
+            .fillMaxSize()
+            .padding(top = 16.dp)
             .padding(horizontal = 8.dp),
         state = lazyListState,
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(items = pokemonList.toImmutableList(), key = { it.hashCode() }) { pokemon ->
+        items(items = pokemonList.toImmutableList(), key = { it.id }) { pokemon ->
             PokemonCard(
                 pokemon = pokemon.toPresentation(),
                 onPokemonClick = {

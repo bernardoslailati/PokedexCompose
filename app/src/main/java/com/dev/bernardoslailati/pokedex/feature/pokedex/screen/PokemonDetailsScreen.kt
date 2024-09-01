@@ -1,6 +1,5 @@
 package com.dev.bernardoslailati.pokedex.feature.pokedex.screen
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -12,12 +11,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -38,7 +35,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -46,18 +42,15 @@ import coil.compose.AsyncImage
 import com.dev.bernardoslailati.pokedex.R
 import com.dev.bernardoslailati.pokedex.commom.ui.theme.Typography
 import com.dev.bernardoslailati.pokedex.domain.pokedex.extension.orZero
-import com.dev.bernardoslailati.pokedex.domain.pokedex.model.ATTACK_STAT_NAME
-import com.dev.bernardoslailati.pokedex.domain.pokedex.model.DEFENSE_STAT_NAME
-import com.dev.bernardoslailati.pokedex.domain.pokedex.model.HP_STAT_NAME
 import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonCardModel
-import com.dev.bernardoslailati.pokedex.domain.pokedex.model.SPEED_STAT_NAME
+import com.dev.bernardoslailati.pokedex.feature.pokedex.screen.component.PokemonStatsInfo
 import okhttp3.internal.toImmutableList
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun PokemonDetailsScreen(
     modifier: Modifier = Modifier,
-    selectedPokemon: PokemonCardModel,
+    pokemon: PokemonCardModel,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     onBack: () -> Unit
@@ -96,7 +89,7 @@ fun PokemonDetailsScreen(
                         .sharedBounds(
                             rememberSharedContentState(
                                 key =
-                                "${selectedPokemon.id}/${selectedPokemon.types.firstOrNull()}/background"
+                                "${pokemon.id}/${pokemon.types.firstOrNull()}/background"
                             ),
                             enter = scaleIn(),
                             exit = scaleOut(),
@@ -106,7 +99,7 @@ fun PokemonDetailsScreen(
                             )
                         ),
                     painter = painterResource(
-                        id = selectedPokemon.types.firstOrNull()?.background.orZero()
+                        id = pokemon.types.firstOrNull()?.background.orZero()
                     ),
                     contentScale = ContentScale.Crop,
                     contentDescription = "Pokemon type background"
@@ -124,10 +117,10 @@ fun PokemonDetailsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .sharedBounds(
-                                rememberSharedContentState(key = "${selectedPokemon.id}/id"),
+                                rememberSharedContentState(key = "${pokemon.id}/id"),
                                 animatedVisibilityScope = animatedVisibilityScope
                             ),
-                        text = selectedPokemon.id,
+                        text = pokemon.id,
                         textAlign = TextAlign.Center,
                         style = TextStyle.Default.copy(
                             fontSize = 36.sp,
@@ -142,10 +135,10 @@ fun PokemonDetailsScreen(
                         modifier = Modifier
                             .fillMaxWidth(0.75f)
                             .sharedBounds(
-                                rememberSharedContentState(key = "${selectedPokemon.id}/image"),
+                                rememberSharedContentState(key = "${pokemon.id}/image"),
                                 animatedVisibilityScope = animatedVisibilityScope
                             ),
-                        model = selectedPokemon.imageUrl,
+                        model = pokemon.imageUrl,
                         error = painterResource(id = R.drawable.img_pokeball),
                         contentDescription = "Pokemon Image"
                     )
@@ -154,10 +147,10 @@ fun PokemonDetailsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .sharedBounds(
-                                rememberSharedContentState(key = "${selectedPokemon.id}/name"),
+                                rememberSharedContentState(key = "${pokemon.id}/name"),
                                 animatedVisibilityScope = animatedVisibilityScope
                             ),
-                        text = selectedPokemon.name.uppercase(),
+                        text = pokemon.name.uppercase(),
                         textAlign = TextAlign.Center,
                         style = TextStyle.Default.copy(
                             fontSize = 36.sp,
@@ -172,8 +165,7 @@ fun PokemonDetailsScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        selectedPokemon.types.toImmutableList().forEach {
-                            Log.d("OPAOPA", "PokemonDetailsScreen: type $it")
+                        pokemon.types.toImmutableList().forEach {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -195,91 +187,7 @@ fun PokemonDetailsScreen(
                         }
                     }
 
-                    Column(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Row {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(0.2f),
-                                text = HP_STAT_NAME.uppercase(),
-                                color = Color.White,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                style = Typography.titleMedium.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    shadow = Shadow(offset = Offset(2f, 2f))
-                                )
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            PokedexProgressBar(
-                                modifier = Modifier.weight(1f),
-                                progress = selectedPokemon.hp / 100.toFloat(),
-                                color = Color(0xFF3DDC84),
-                                label = selectedPokemon.getHpText()
-                            )
-                        }
-                        Row {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(0.2f),
-                                text = ATTACK_STAT_NAME.uppercase(),
-                                color = Color.White,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                style = Typography.titleMedium.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    shadow = Shadow(offset = Offset(2f, 2f))
-                                )
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            PokedexProgressBar(
-                                modifier = Modifier.weight(1f),
-                                progress = selectedPokemon.attack / 100.toFloat(),
-                                color = Color(0xFFF7665E),
-                                label = selectedPokemon.getAttackText()
-                            )
-                        }
-                        Row {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(0.2f),
-                                text = DEFENSE_STAT_NAME.uppercase(),
-                                color = Color.White,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                style = Typography.titleMedium.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    shadow = Shadow(offset = Offset(2f, 2f))
-                                )
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            PokedexProgressBar(
-                                modifier = Modifier.weight(1f),
-                                progress = selectedPokemon.defense / 100.toFloat(),
-                                color = Color(0xFF65BCDA),
-                                label = selectedPokemon.getDefenseText()
-                            )
-                        }
-                        Row {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(0.2f),
-                                text = SPEED_STAT_NAME.uppercase(),
-                                color = Color.White,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                style = Typography.titleMedium.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    shadow = Shadow(offset = Offset(2f, 2f))
-                                )
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            PokedexProgressBar(
-                                modifier = Modifier.weight(1f),
-                                progress = selectedPokemon.speed / 100.toFloat(),
-                                color = Color(0xFFFF9800),
-                                label = selectedPokemon.getSpeedText()
-                            )
-                        }
-                    }
+                    PokemonStatsInfo(pokemon = pokemon)
                 }
             }
         }

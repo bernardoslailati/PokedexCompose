@@ -5,12 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.dev.bernardoslailati.pokedex.commom.ui.theme.AppRoute
+import com.dev.bernardoslailati.pokedex.commom.ui.route.AppRoute
 import com.dev.bernardoslailati.pokedex.commom.ui.theme.PokedexTheme
-import com.dev.bernardoslailati.pokedex.feature.pokedex.PokedexEvent
 import com.dev.bernardoslailati.pokedex.feature.pokedex.PokedexViewModel
 import com.dev.bernardoslailati.pokedex.feature.pokedex.screen.PokedexScreen
-import com.dev.bernardoslailati.pokedex.feature.splash.PokedexSplashScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -23,24 +21,13 @@ fun App() {
         Surface {
             NavHost(
                 navController = navController,
-                startDestination = AppRoute.Splash
+                startDestination = AppRoute.Pokedex
             ) {
-                composable<AppRoute.Splash> {
-                    PokedexSplashScreen(
-                        onSplashStart = {
-                            pokedexViewModel.onEvent(PokedexEvent.OnFetchPokemons)
-                        }, onSplashFinished = {
-                            navController.navigate(AppRoute.Pokedex) {
-                                popUpTo(AppRoute.Splash) {
-                                    inclusive = true
-                                }
-                            }
-                        }
-                    )
-                }
-
                 composable<AppRoute.Pokedex> {
-                    PokedexScreen(uiState = pokedexViewModel.uiState)
+                    PokedexScreen(
+                        uiState = pokedexViewModel.uiState,
+                        onEvent = pokedexViewModel::onEvent
+                    )
                 }
             }
         }

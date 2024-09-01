@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,15 +26,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.dev.bernardoslailati.pokedex.R
+import com.dev.bernardoslailati.pokedex.commom.ui.component.PokedexLoadingAnimation
 import com.dev.bernardoslailati.pokedex.domain.pokedex.mapper.toPresentation
 import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonModel
+import com.dev.bernardoslailati.pokedex.feature.pokedex.PokedexEvent
 import com.dev.bernardoslailati.pokedex.feature.pokedex.PokedexUiState
+import com.dev.bernardoslailati.pokedex.feature.pokedex.screen.component.FailedToSyncPokemonsTryAgain
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun PokedexScreen(
     modifier: Modifier = Modifier,
-    uiState: PokedexUiState
+    uiState: PokedexUiState,
+    onEvent: (PokedexEvent) -> Unit
 ) {
     var selectedPokemon by remember { mutableStateOf<PokemonModel?>(null) }
     var showDetails by remember {
@@ -41,47 +46,60 @@ fun PokedexScreen(
     }
     val lazyListState = rememberLazyListState()
 
-    Column(
-        modifier = modifier.fillMaxWidth()
-            .background(Color.Black),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        SharedTransitionLayout(modifier = Modifier.fillMaxSize()) {
-            AnimatedContent(
-                showDetails,
-                label = "Animated Content Pokemon Details"
-            ) { targetState ->
-                if (!targetState) {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        Image(
-                            modifier = Modifier.fillMaxSize().blur(1.dp, 1.dp)
-                                .shadow(elevation = 4.dp),
-                            painter = painterResource(id = R.drawable.bg_pokedex),
-                            contentScale = ContentScale.Crop,
-                            contentDescription = "Pokedex Image"
-                        )
-                        Column {
-                            PokemonListScreen(
-                                modifier = Modifier.padding(vertical = 24.dp),
-                                pokemonList = uiState.pokemons,
-                                lazyListState = lazyListState,
-                                onPokemonClick = { pokemon ->
-                                    selectedPokemon = pokemon
-                                    showDetails = true
-                                },
-                                sharedTransitionScope = this@SharedTransitionLayout,
-                                animatedVisibilityScope = this@AnimatedContent
-                            )
+    LaunchedEffect(true) {
+        onEvent(PokedexEvent.OnFetchPokemons)
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Image(
+            modifier = Modifier
+                .fillMaxSize()
+                .blur(1.dp, 1.dp)
+                .shadow(elevation = 4.dp),
+            painter = painterResource(id = R.drawable.bg_pokedex),
+            contentScale = ContentScale.Crop,
+            contentDescription = "Pokedex Image"
+        )
+        if (uiState.failedToSync)
+            FailedToSyncPokemonsTryAgain(onTryAgainClick = { onEvent(PokedexEvent.OnFetchPokemons) })
+        else {
+            if (uiState.isLoading)
+                PokedexLoadingAnimation()
+            else {
+                Column(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .background(Color.Black),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    SharedTransitionLayout(modifier = Modifier.fillMaxSize()) {
+                        AnimatedContent(
+                            showDetails,
+                            label = "Animated Content Pokemon Details"
+                        ) { targetState ->
+                            if (!targetState) {
+                                PokemonListScreen(
+                                    modifier = Modifier.padding(vertical = 24.dp),
+                                    pokemonList = uiState.pokemons,
+                                    lazyListState = lazyListState,
+                                    onPokemonClick = { pokemon ->
+                                        selectedPokemon = pokemon
+                                        showDetails = true
+                                    },
+                                    sharedTransitionScope = this@SharedTransitionLayout,
+                                    animatedVisibilityScope = this@AnimatedContent
+                                )
+                            } else {
+                                selectedPokemon?.let {
+                                    PokemonDetailsScreen(
+                                        pokemon = it.toPresentation(),
+                                        onBack = { showDetails = false },
+                                        sharedTransitionScope = this@SharedTransitionLayout,
+                                        animatedVisibilityScope = this@AnimatedContent
+                                    )
+                                }
+                            }
                         }
-                    }
-                } else {
-                    selectedPokemon?.let {
-                        PokemonDetailsScreen(
-                            selectedPokemon = it.toPresentation(),
-                            onBack = { showDetails = false },
-                            sharedTransitionScope = this@SharedTransitionLayout,
-                            animatedVisibilityScope = this@AnimatedContent
-                        )
                     }
                 }
             }

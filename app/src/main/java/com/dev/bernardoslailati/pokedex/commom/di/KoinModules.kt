@@ -8,6 +8,8 @@ import com.dev.bernardoslailati.pokedex.data.pokedex.remote.datasource.PokedexRe
 import com.dev.bernardoslailati.pokedex.data.pokedex.remote.datasource.PokedexRemoteDataSourceImpl
 import com.dev.bernardoslailati.pokedex.data.pokedex.remote.repository.PokedexRepositoryImpl
 import com.dev.bernardoslailati.pokedex.data.pokedex.remote.service.PokedexApiService
+import com.dev.bernardoslailati.pokedex.data.sync.local.datasource.SyncLocalDataSource
+import com.dev.bernardoslailati.pokedex.data.sync.local.datasource.SyncLocalDataSourceImpl
 import com.dev.bernardoslailati.pokedex.domain.pokedex.repository.PokedexRepository
 import com.dev.bernardoslailati.pokedex.feature.pokedex.PokedexViewModel
 import io.ktor.client.HttpClient
@@ -18,8 +20,9 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
-import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -29,7 +32,6 @@ val remoteModule = module {
             install(ContentNegotiation) {
                 json(
                     Json {
-                        //ignores json keys we have not included in our data class
                         ignoreUnknownKeys = true
                     }
                 )
@@ -48,7 +50,7 @@ val remoteModule = module {
 val localModule = module {
     single {
         Room.databaseBuilder(
-            context = androidContext(),
+            context = androidApplication(),
             klass = PokedexDatabase::class.java,
             name = "pokedex-database"
         ).build()
@@ -58,13 +60,20 @@ val localModule = module {
     }
 }
 
+val coroutinesModule = module {
+    single {
+        Dispatchers.IO
+    }
+}
+
 val dataSourceModule = module {
+    single<SyncLocalDataSource> { SyncLocalDataSourceImpl(androidApplication()) }
     single<PokedexRemoteDataSource> { PokedexRemoteDataSourceImpl(get()) }
     single<PokedexLocalDataSource> { PokedexLocalDataSourceImpl(get()) }
 }
 
 val repositoryModule = module {
-    single<PokedexRepository> { PokedexRepositoryImpl(get(), get()) }
+    single<PokedexRepository> { PokedexRepositoryImpl(get(), get(), get(), get()) }
 }
 
 val viewModelModule = module {

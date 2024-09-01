@@ -1,4 +1,4 @@
-package com.dev.bernardoslailati.pokedex.feature.pokedex.screen
+package com.dev.bernardoslailati.pokedex.feature.pokedex.screen.component
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi

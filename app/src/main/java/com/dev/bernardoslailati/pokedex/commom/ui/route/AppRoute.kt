@@ -1,4 +1,4 @@
-package com.dev.bernardoslailati.pokedex.commom.ui.theme
+package com.dev.bernardoslailati.pokedex.commom.ui.route
 
 import kotlinx.serialization.Serializable
 

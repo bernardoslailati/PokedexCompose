@@ -1,13 +1,11 @@
-package com.dev.bernardoslailati.pokedex.feature.pokedex.screen
+package com.dev.bernardoslailati.pokedex.feature.pokedex.screen.component
 
 import androidx.annotation.FloatRange
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -40,7 +38,7 @@ import com.dev.bernardoslailati.pokedex.commom.ui.theme.PokedexTheme
 import com.dev.bernardoslailati.pokedex.commom.ui.theme.Typography
 
 @Composable
-fun PokedexProgressBar(
+fun PokemonStatBar(
     modifier: Modifier = Modifier,
     @FloatRange(0.0, 1.0) progress: Float,
     color: Color,
@@ -144,7 +142,7 @@ private fun PokedexProgressBarPreview1() {
                 .fillMaxWidth()
                 .height(120.dp)
         ) {
-            PokedexProgressBar(
+            PokemonStatBar(
                 modifier = Modifier.align(Alignment.Center),
                 progress = 0.1f,
                 color = Color.Red,
@@ -163,7 +161,7 @@ private fun PokedexProgressBarPreview2() {
                 .fillMaxWidth()
                 .height(120.dp),
         ) {
-            PokedexProgressBar(
+            PokemonStatBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.Center),

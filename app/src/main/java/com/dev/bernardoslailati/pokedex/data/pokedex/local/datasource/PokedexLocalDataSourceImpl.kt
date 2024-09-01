@@ -13,7 +13,7 @@ class PokedexLocalDataSourceImpl(
     }
 
     override suspend fun getByGeneration(generation: PokemonGeneration): List<PokemonLocalModel> {
-        return pokemonDao.loadAllByIds(generation.range().toList().toIntArray())
+        return pokemonDao.loadAllByIds(generation.rangeIds().toList().toIntArray())
     }
 
     override suspend fun savePokemon(pokemon: PokemonLocalModel) {

@@ -7,6 +7,7 @@ import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.request.CachePolicy
 import coil.util.DebugLogger
+import com.dev.bernardoslailati.pokedex.commom.di.coroutinesModule
 import com.dev.bernardoslailati.pokedex.commom.di.dataSourceModule
 import com.dev.bernardoslailati.pokedex.commom.di.localModule
 import com.dev.bernardoslailati.pokedex.commom.di.remoteModule
@@ -22,6 +23,7 @@ class MainApplication : Application(), ImageLoaderFactory {
         startKoin {
             androidContext(this@MainApplication)
             modules(
+                coroutinesModule,
                 remoteModule,
                 localModule,
                 dataSourceModule,

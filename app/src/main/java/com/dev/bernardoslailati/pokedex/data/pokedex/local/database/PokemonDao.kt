@@ -10,10 +10,10 @@ import com.dev.bernardoslailati.pokedex.data.pokedex.local.model.PokemonLocalMod
 @Dao
 interface PokemonDao {
 
-    @Query("SELECT * FROM pokemon")
+    @Query("SELECT * FROM pokemon ORDER BY id")
     fun getAll(): List<PokemonLocalModel>
 
-    @Query("SELECT * FROM pokemon WHERE id IN (:pokemonIds)")
+    @Query("SELECT * FROM pokemon WHERE id IN (:pokemonIds) ORDER BY id")
     fun loadAllByIds(pokemonIds: IntArray): List<PokemonLocalModel>
 
     @Query("SELECT * FROM pokemon WHERE id = :id LIMIT 1")
