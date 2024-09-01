@@ -91,3 +91,6 @@ https://github.com/user-attachments/assets/c986bfe9-8785-45f4-94e4-0ef9a35e49b5
 - Partir para os testes de integração, que exijam um maior nível de complexidade para abranger determinados fluxos importantes (ex: sincronização completa de pokémons)
 - Concluir com os testes end2end de funcionalidades
 - Outras boas ferramentas que poderiam ser usadas em testes: Espresso, Roboeletric, Maestro
+
+  ### CI/CD
+  - Concluir com a configuração de uma esteira de CI/CD a ser aplicada no projeto, como boas opções de ferramentas temos Bitrise, Jenkins, Github Actions, Fastlane.
