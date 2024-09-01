@@ -7,6 +7,7 @@ Listagem de pokémons da 1ª geração com a opção de favoritos (API [PokéApi
 - 100% Kotlin
 - MVI
 - Arquitetura Limpa
+- SOLID
 - Modularização por feature/layer (seguindo princípios do [Guia para a arquitetura do app](https://developer.android.com/topic/architecture?hl=pt-br]), documentação oficial do Android)
 - Offline-first (cache ativado para informações de pokémons e o carregamento de suas respectivas imagens)
 - UI: Jetpack Compose
