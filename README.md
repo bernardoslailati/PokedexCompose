@@ -57,20 +57,37 @@ https://github.com/user-attachments/assets/c986bfe9-8785-45f4-94e4-0ef9a35e49b5
 
 ## Visão de Futuro
 
+### Continuação da Modularização
+- Devido ao tempo, não foi possível concluir a modularização prevista descrita nessa documentação, porém toda a estrutura de pastas feita segue o seu formato final esperado.
+
+### Tematização
+- Configurar o tema do aplicativo para seguir regras de design próprias: cores (claro e escuro), dimensões, tipografia, espaçamentos, etc. Tudo isso seria centralizado em arquivos próprios (Colors.kt, Dimens.kt, Typography.kt) baseado em Jetpack Compose e entregues via CompositionLocal (como descrito [aqui](https://developer.android.com/develop/ui/compose/compositionlocal?hl=pt-br)).
+
+### Caracterizar Perfil do Usuário
+- Algo que traria maior qualidade a experiência do usuário ao se utilizar o app, seria a criação dos fluxos de cadastro e login, utilizando por exemplo o Firebase (Authenticator, Firestore e Realtime Database), que possibilite reter informações específicas importantes atreladas ao perfil do usuário (ex: pokémons favoritos).
+
+### Barra de Busca Filtrada de Pokémons
+- Permitir buscar por nome, geração e tipo seriam filtros que trariam uma melhor experiência à funcionalidade de listagem (não foi possível concluir devido ao tempo).
+
 ### Armazenamento de API keys de forma segura
-- Caso necessário consumir outras APIs, uma boa escolha seria armazenar suas chaves de acesso de forma encriptada em um arquivo C++, utilizando o JNI e NDK no projeto, evitando brechas de segurança ao aplicar engenharia reversa no APK (como visto [aqui](https://github.com/BernardoSlailati/EncryptSensibleData)).
+- A API escolhida não exige API key, porém, caso necessário consumir outras APIs que exijam, uma boa escolha seria armazenar tais chaves de forma encriptada em um arquivo C++, utilizando o JNI e NDK, evitando brechas de segurança referente a engenharia reversa no APK (como visto [aqui]([https://github.com/BernardoSlailati/EncryptSensibleData](https://www.geeksforgeeks.org/securing-api-keys-using-android-ndk/))).
 
 ### Gerar versão de build release aplicando ofuscação e minificação
-- Aplicar minificação e ofuscação de código ao ser gerada a versão de build release, sendo necess[ario criar o arquivo que dite as regras de ofuscação para o ProGuard.
+- Aplicar minificação e ofuscação de código ao ser gerada a versão de build release, sendo necessário criar o arquivo que dite as regras de ofuscação para o ProGuard.
 
 ### Módulo analytics apartado para acompanhamento de métricas
 - Desenvolver módulo separado de analytics para tracking de eventos do usuário, logs gerais, etc. e que tenha uma interface agnóstica a ferramenta de análise escolhida (Firebase, Embrace, DataDog, UXCam, etc.)
 
 ### Segurança de dados sensíveis do usuário
-- Ao implementar um fluxo de login e armazenamento local de dados do usuário, anonimizar dados pessoais sensíveis aplicando criptografia.
+- Ao implementar um fluxo de login e armazenamento local de dados do usuário, anonimizar dados pessoais sensíveis aplicando criptografia (como visto [aqui](https://medium.com/localizalabs/encriptando-dados-pessoais-de-usu%C3%A1rios-no-android-516cc39cd2d9)).
+
+### Análise de qualidade de código estático
+- Escolha de uma ferramenta de análise de código estático (detekt ou ktlint, por exemplo), criação das regras de lint do projeto e de um script que rode automaticamente a cada commit tal análise
 
 ### Testabilidade
 - Utilizar inicialmente JUnit e Mockk para a realização dos testes unitários mais básicos (envolvendo os DataSources locais e remotos - consumo de APIs e bancos de dados - e em seguida as estruturas de dados de Domain), criando mocks e fakes para simular o comportamento de tais classes
+- Seguir com os testes unitários de Repository e ViewModels
 - Feito isso, poderiam ser feitos testes de snapshot mais simples com os Composables mais importantes de cada fluxo, devido a facilidade
-- Na sequências, seguir com os testes unitários de Repository e ViewModels
-- E para concluir, os testes de integração, que exijam um maior nível de complexidade para abranger determinados fluxos (ex: sincronização completa de pokémons)
+- Partir para os testes de integração, que exijam um maior nível de complexidade para abranger determinados fluxos importantes (ex: sincronização completa de pokémons)
+- Concluir com os testes end2end de funcionalidades
+- Outras boas ferramentas que poderiam ser usadas em testes: Espresso, Roboeletric, Maestro
