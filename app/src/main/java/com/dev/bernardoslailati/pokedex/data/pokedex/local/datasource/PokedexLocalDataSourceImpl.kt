@@ -3,6 +3,7 @@ package com.dev.bernardoslailati.pokedex.data.pokedex.local.datasource
 import com.dev.bernardoslailati.pokedex.data.pokedex.local.database.PokemonDao
 import com.dev.bernardoslailati.pokedex.data.pokedex.local.model.PokemonLocalModel
 import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonGeneration
+import kotlinx.coroutines.flow.Flow
 
 class PokedexLocalDataSourceImpl(
     private val pokemonDao: PokemonDao
@@ -12,7 +13,7 @@ class PokedexLocalDataSourceImpl(
         return pokemonDao.getAll()
     }
 
-    override suspend fun getByGeneration(generation: PokemonGeneration): List<PokemonLocalModel> {
+    override suspend fun getByGeneration(generation: PokemonGeneration): Flow<List<PokemonLocalModel>> {
         return pokemonDao.loadAllByIds(generation.rangeIds().toList().toIntArray())
     }
 

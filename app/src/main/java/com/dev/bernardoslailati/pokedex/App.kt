@@ -1,7 +1,9 @@
 package com.dev.bernardoslailati.pokedex
 
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -18,13 +20,15 @@ fun App() {
 
         val pokedexViewModel = koinViewModel<PokedexViewModel>()
 
-        Surface {
+        Scaffold{ innerPadding ->
             NavHost(
+                modifier = Modifier,
                 navController = navController,
                 startDestination = AppRoute.Pokedex
             ) {
                 composable<AppRoute.Pokedex> {
                     PokedexScreen(
+                        modifier = Modifier.padding(innerPadding),
                         uiState = pokedexViewModel.uiState,
                         onEvent = pokedexViewModel::onEvent
                     )

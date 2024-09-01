@@ -1,6 +1,5 @@
 package com.dev.bernardoslailati.pokedex.data.pokedex.remote.repository
 
-import android.util.Log
 import com.dev.bernardoslailati.pokedex.data.pokedex.local.datasource.PokedexLocalDataSource
 import com.dev.bernardoslailati.pokedex.data.pokedex.local.mapper.toLocal
 import com.dev.bernardoslailati.pokedex.data.pokedex.local.model.PokemonLocalModel
@@ -14,7 +13,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class PokedexRepositoryImpl(
@@ -24,48 +23,41 @@ class PokedexRepositoryImpl(
     private val syncLocalDataSource: SyncLocalDataSource
 ) : PokedexRepository {
 
-    override suspend fun fetchPokemons(generation: PokemonGeneration): Flow<List<PokemonModel>> =
-        flow {
-            var localPokemonsList = mutableListOf<PokemonLocalModel>()
+    override suspend fun syncPokemons(generation: PokemonGeneration) {
+        var localPokemonsList = mutableListOf<PokemonLocalModel>()
 
-            while (localPokemonsList.size != generation.rangeIds().toList().size) {
-                localPokemonsList = withContext(ioDispatcher) {
-                    localDataSource.getPokemons().toMutableList()
-                }
-                Log.d("OPAOPA", "localPokemons ${localPokemonsList.size}")
-
-                val localPokemonIds = localPokemonsList.map { it.id }.toSet()
-                Log.d("OPAOPA", "localPokemonIds $localPokemonIds")
-
-                val remainingPokemonIds =
-                    generation.rangeIds().toList().subtract(localPokemonIds)
-                if (remainingPokemonIds.isEmpty())
-                    syncLocalDataSource.confirmPokemonsSync(generation = PokemonGeneration.FIRST)
-                Log.d("OPAOPA", "remainingPokemonIds $remainingPokemonIds")
-
-                if (localPokemonsList.isNotEmpty())
-                    emit(localPokemonsList.toDomainList())
-
-                if (remainingPokemonIds.isNotEmpty()) {
-                    loop@ for (remainingPokemonId in remainingPokemonIds) {
-                        val remotePokemon =
-                            withContext(ioDispatcher) {
-                                remoteDataSource.fetchPokemon(
-                                    remainingPokemonId
-                                )
-                            } ?: break@loop
-
-                        val localPokemon = remotePokemon.toLocal()
-                        localPokemonsList.add(localPokemon)
-
-                        Log.d("OPAOPA", "emit [${localPokemon.id}] $localPokemon")
-                        withContext(ioDispatcher) { localDataSource.savePokemon(localPokemon) }
-
-                        if (localPokemonsList.isNotEmpty()) emit(localPokemonsList.toDomainList())
-                    }
-                }
+        while (localPokemonsList.size != generation.rangeIds().toList().size) {
+            localPokemonsList = withContext(ioDispatcher) {
+                localDataSource.getPokemons().toMutableList()
             }
 
+            val localPokemonIds = localPokemonsList.map { it.id }.toSet()
+
+            val remainingPokemonIds =
+                generation.rangeIds().toList().subtract(localPokemonIds)
+            if (remainingPokemonIds.isEmpty())
+                syncLocalDataSource.confirmPokemonsSync(generation = PokemonGeneration.FIRST)
+
+            if (remainingPokemonIds.isNotEmpty()) {
+                loop@ for (remainingPokemonId in remainingPokemonIds) {
+                    val remotePokemon =
+                        withContext(ioDispatcher) {
+                            remoteDataSource.fetchPokemon(
+                                remainingPokemonId
+                            )
+                        } ?: break@loop
+
+                    val localPokemon = remotePokemon.toLocal()
+                    localPokemonsList.add(localPokemon)
+
+                    withContext(ioDispatcher) { localDataSource.savePokemon(localPokemon) }
+                }
+            }
             delay(timeMillis = 2_000)
         }
+    }
+
+    override suspend fun fetchPokemons(generation: PokemonGeneration): Flow<List<PokemonModel>> =
+       localDataSource.getByGeneration(generation).map { it.toDomainList() }
+
 }

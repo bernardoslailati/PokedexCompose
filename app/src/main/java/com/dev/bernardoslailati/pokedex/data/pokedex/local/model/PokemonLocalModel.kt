@@ -6,8 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "pokemon")
 data class PokemonLocalModel(
-    @PrimaryKey(autoGenerate = true)
-    val uid: Int = 0,
+    @PrimaryKey
     val id: Int,
     val name: String,
     @ColumnInfo(name = "image_url")

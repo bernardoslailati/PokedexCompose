@@ -2,12 +2,13 @@ package com.dev.bernardoslailati.pokedex.data.pokedex.local.datasource
 
 import com.dev.bernardoslailati.pokedex.data.pokedex.local.model.PokemonLocalModel
 import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonGeneration
+import kotlinx.coroutines.flow.Flow
 
 interface PokedexLocalDataSource {
 
     suspend fun getPokemons(): List<PokemonLocalModel>
 
-    suspend fun getByGeneration(generation: PokemonGeneration): List<PokemonLocalModel>
+    suspend fun getByGeneration(generation: PokemonGeneration): Flow<List<PokemonLocalModel>>
 
     suspend fun savePokemon(pokemon: PokemonLocalModel)
 

@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface PokedexRepository {
 
+    suspend fun syncPokemons(generation: PokemonGeneration)
+
     suspend fun fetchPokemons(generation: PokemonGeneration): Flow<List<PokemonModel>>
 
 }
