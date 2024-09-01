@@ -34,6 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.dev.bernardoslailati.pokedex.R
 import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonCardModel
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -87,6 +88,8 @@ fun PokemonCard(
                                 rememberSharedContentState(key = "${pokemon.id}/image"),
                                 animatedVisibilityScope = animatedVisibilityScope
                             ),
+                        placeholder = painterResource(id = R.drawable.img_shadow),
+                        error = painterResource(id = R.drawable.img_shadow),
                         model = pokemon.imageUrl,
                         contentDescription = "Pokemon Image"
                     )

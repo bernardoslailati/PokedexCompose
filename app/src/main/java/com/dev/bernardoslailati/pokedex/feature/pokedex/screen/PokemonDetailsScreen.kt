@@ -139,7 +139,8 @@ fun PokemonDetailsScreen(
                                 animatedVisibilityScope = animatedVisibilityScope
                             ),
                         model = pokemon.imageUrl,
-                        error = painterResource(id = R.drawable.img_pokeball),
+                        placeholder = painterResource(id = R.drawable.img_shadow),
+                        error = painterResource(id = R.drawable.img_shadow),
                         contentDescription = "Pokemon Image"
                     )
 
