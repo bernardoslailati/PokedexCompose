@@ -66,6 +66,17 @@ class PokedexRepositoryImpl(
     override suspend fun fetchPokemons(generation: PokemonGeneration): Flow<List<PokemonModel>> =
         localDataSource.getByGeneration(generation).map { it.toDomainList() }
 
+    override suspend fun favoriteChange(pokemon: PokemonModel) {
+        withContext(ioDispatcher) {
+            val targetPokemonLocal =
+                localDataSource.getPokemonById(pokemon.id)
+
+            targetPokemonLocal?.let {
+                localDataSource.updatePokemon(targetPokemonLocal.copy(isFavorite = !targetPokemonLocal.isFavorite))
+            }
+        }
+    }
+
     companion object {
         const val TRY_AGAIN_SYNC_DELAY_TIME = 2_000L
     }

@@ -16,6 +16,7 @@ data class PokemonCardModel(
     val id: String,
     val name: String,
     val imageUrl: String,
+    val isFavorite: Boolean,
     val types: List<PokemonType>,
     val stats: List<PokemonStatsModel>
 ) {

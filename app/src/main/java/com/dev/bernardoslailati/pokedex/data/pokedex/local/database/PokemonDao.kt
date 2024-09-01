@@ -15,7 +15,7 @@ interface PokemonDao {
     @Query("SELECT * FROM pokemon ORDER BY id")
     fun getAll(): List<PokemonLocalModel>
 
-    @Query("SELECT * FROM pokemon WHERE id IN (:pokemonIds) ORDER BY id")
+    @Query("SELECT * FROM pokemon WHERE id IN (:pokemonIds) ORDER BY is_favorite DESC, id ASC")
     fun loadAllByIds(pokemonIds: IntArray): Flow<List<PokemonLocalModel>>
 
     @Query("SELECT * FROM pokemon WHERE id = :id LIMIT 1")

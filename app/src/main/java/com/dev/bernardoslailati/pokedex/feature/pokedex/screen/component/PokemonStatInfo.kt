@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.dev.bernardoslailati.pokedex.commom.ui.theme.Typography
+import com.dev.bernardoslailati.ui.theme.Typography
 
 @Composable
 fun PokemonStatInfo(statName: String, color: Color, progress: Float, label: String) {
@@ -24,7 +24,7 @@ fun PokemonStatInfo(statName: String, color: Color, progress: Float, label: Stri
             color = Color.White,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            style = Typography.titleMedium.copy(
+            style = com.dev.bernardoslailati.ui.theme.Typography.titleMedium.copy(
                 fontWeight = FontWeight.Bold,
                 shadow = Shadow(offset = Offset(2f, 2f))
             )

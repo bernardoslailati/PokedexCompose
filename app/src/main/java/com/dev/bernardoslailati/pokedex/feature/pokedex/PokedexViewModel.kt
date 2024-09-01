@@ -30,6 +30,7 @@ class PokedexViewModel(private val repository: PokedexRepository) : ViewModel() 
     fun onEvent(event: PokedexEvent) {
         when (event) {
             OnFetchPokemons -> fetchPokemons()
+            is OnFavoriteChange -> favoriteChange(pokemon = event.pokemon)
         }
     }
 
@@ -39,6 +40,12 @@ class PokedexViewModel(private val repository: PokedexRepository) : ViewModel() 
             repository.syncPokemons(generation = PokemonGeneration.FIRST)
         }
         verifyIfSyncIsFailed()
+    }
+
+    private fun favoriteChange(pokemon: PokemonModel) {
+        viewModelScope.launch {
+            repository.favoriteChange(pokemon)
+        }
     }
 
     private fun verifyIfSyncIsFailed() {

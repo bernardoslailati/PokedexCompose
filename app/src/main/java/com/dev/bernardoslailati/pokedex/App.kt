@@ -7,10 +7,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.dev.bernardoslailati.pokedex.commom.ui.route.AppRoute
-import com.dev.bernardoslailati.pokedex.commom.ui.theme.PokedexTheme
 import com.dev.bernardoslailati.pokedex.feature.pokedex.PokedexViewModel
 import com.dev.bernardoslailati.pokedex.feature.pokedex.screen.PokedexScreen
+import com.dev.bernardoslailati.ui.route.AppRoute
+import com.dev.bernardoslailati.ui.theme.PokedexTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -20,7 +20,7 @@ fun App() {
 
         val pokedexViewModel = koinViewModel<PokedexViewModel>()
 
-        Scaffold{ innerPadding ->
+        Scaffold { innerPadding ->
             NavHost(
                 modifier = Modifier,
                 navController = navController,

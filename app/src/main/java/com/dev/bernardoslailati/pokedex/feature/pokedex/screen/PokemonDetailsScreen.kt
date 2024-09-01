@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 import com.dev.bernardoslailati.pokedex.R
-import com.dev.bernardoslailati.pokedex.commom.ui.theme.Typography
 import com.dev.bernardoslailati.pokedex.domain.pokedex.extension.orZero
 import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonCardModel
 import com.dev.bernardoslailati.pokedex.feature.pokedex.screen.component.PokemonStatsInfo
@@ -179,7 +178,7 @@ fun PokemonDetailsScreen(
                                 Text(
                                     text = it.name.uppercase(),
                                     color = Color.White,
-                                    style = Typography.titleMedium.copy(
+                                    style = com.dev.bernardoslailati.ui.theme.Typography.titleMedium.copy(
                                         fontWeight = FontWeight.Bold,
                                         shadow = Shadow(offset = Offset(2f, 2f))
                                     )

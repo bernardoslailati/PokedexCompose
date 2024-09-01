@@ -10,4 +10,6 @@ interface PokedexRepository {
 
     suspend fun fetchPokemons(generation: PokemonGeneration): Flow<List<PokemonModel>>
 
+    suspend fun favoriteChange(pokemon: PokemonModel)
+
 }

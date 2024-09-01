@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dev.bernardoslailati.pokedex.R
-import com.dev.bernardoslailati.pokedex.commom.ui.theme.Typography
+import com.dev.bernardoslailati.ui.theme.Typography
 
 @Composable
 fun FailedToSyncPokemonsTryAgain(modifier: Modifier = Modifier, onTryAgainClick: () -> Unit) {
@@ -35,7 +35,7 @@ fun FailedToSyncPokemonsTryAgain(modifier: Modifier = Modifier, onTryAgainClick:
         )
         Text(
             text = "Oops... Houve uma falha ao sincronizar a sua Pokedéx.\n\nVerifique a sua conexão com internet e tente novamente.",
-            style = Typography.titleLarge.copy(
+            style = com.dev.bernardoslailati.ui.theme.Typography.titleLarge.copy(
                 color = Color.White,
                 textAlign = TextAlign.Center,
                 fontFamily = FontFamily.SansSerif
@@ -48,7 +48,7 @@ fun FailedToSyncPokemonsTryAgain(modifier: Modifier = Modifier, onTryAgainClick:
             onClick = onTryAgainClick) {
             Text(
                 text = "Tentar novamente",
-                style = Typography.titleMedium.copy(color = Color.White)
+                style = com.dev.bernardoslailati.ui.theme.Typography.titleMedium.copy(color = Color.White)
             )
         }
     }

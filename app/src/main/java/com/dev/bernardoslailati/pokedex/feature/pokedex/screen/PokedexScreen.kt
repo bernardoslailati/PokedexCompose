@@ -26,10 +26,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.dev.bernardoslailati.pokedex.R
-import com.dev.bernardoslailati.pokedex.commom.ui.component.PokedexLoadingAnimation
+import com.dev.bernardoslailati.ui.component.PokedexLoadingAnimation
 import com.dev.bernardoslailati.pokedex.domain.pokedex.mapper.toPresentation
 import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonModel
 import com.dev.bernardoslailati.pokedex.feature.pokedex.PokedexEvent
+import com.dev.bernardoslailati.pokedex.feature.pokedex.PokedexEvent.*
 import com.dev.bernardoslailati.pokedex.feature.pokedex.PokedexUiState
 import com.dev.bernardoslailati.pokedex.feature.pokedex.screen.component.FailedToSyncPokemonsTryAgain
 
@@ -47,7 +48,7 @@ fun PokedexScreen(
     val lazyListState = rememberLazyListState()
 
     LaunchedEffect(true) {
-        onEvent(PokedexEvent.OnFetchPokemons)
+        onEvent(OnFetchPokemons)
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -61,7 +62,7 @@ fun PokedexScreen(
             contentDescription = "Pokedex Image"
         )
         if (uiState.failedToSync)
-            FailedToSyncPokemonsTryAgain(onTryAgainClick = { onEvent(PokedexEvent.OnFetchPokemons) })
+            FailedToSyncPokemonsTryAgain(onTryAgainClick = { onEvent(OnFetchPokemons) })
         else {
             if (uiState.isLoading)
                 PokedexLoadingAnimation()
@@ -85,6 +86,9 @@ fun PokedexScreen(
                                     onPokemonClick = { pokemon ->
                                         selectedPokemon = pokemon
                                         showDetails = true
+                                    },
+                                    onFavoriteClick = { pokemon ->
+                                        onEvent(OnFavoriteChange(pokemon))
                                     },
                                     sharedTransitionScope = this@SharedTransitionLayout,
                                     animatedVisibilityScope = this@AnimatedContent

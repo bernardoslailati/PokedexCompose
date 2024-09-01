@@ -34,8 +34,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dev.bernardoslailati.pokedex.commom.ui.theme.PokedexTheme
-import com.dev.bernardoslailati.pokedex.commom.ui.theme.Typography
+import com.dev.bernardoslailati.ui.theme.PokedexTheme
+import com.dev.bernardoslailati.ui.theme.Typography
 
 @Composable
 fun PokemonStatBar(
@@ -103,7 +103,7 @@ fun PokemonStatBar(
                     text = label,
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
-                    style = Typography.bodyMedium.copy(
+                    style = com.dev.bernardoslailati.ui.theme.Typography.bodyMedium.copy(
                         shadow = Shadow(offset = Offset(2f, 2f))
                     ),
                     fontSize = 12.sp
@@ -124,7 +124,7 @@ fun PokemonStatBar(
                 text = label,
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
-                style = Typography.bodyMedium.copy(
+                style = com.dev.bernardoslailati.ui.theme.Typography.bodyMedium.copy(
                     shadow = Shadow(offset = Offset(2f, 2f))
                 ),
                 fontSize = 12.sp
@@ -136,7 +136,7 @@ fun PokemonStatBar(
 @Preview
 @Composable
 private fun PokedexProgressBarPreview1() {
-    PokedexTheme {
+    com.dev.bernardoslailati.ui.theme.PokedexTheme {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -155,7 +155,7 @@ private fun PokedexProgressBarPreview1() {
 @Preview
 @Composable
 private fun PokedexProgressBarPreview2() {
-    PokedexTheme {
+    com.dev.bernardoslailati.ui.theme.PokedexTheme {
         Box(
             modifier = Modifier
                 .fillMaxWidth()

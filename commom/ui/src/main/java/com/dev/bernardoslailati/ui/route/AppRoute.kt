@@ -1,12 +1,11 @@
-package com.dev.bernardoslailati.pokedex.commom.ui.route
+package com.dev.bernardoslailati.ui.route
 
 import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface AppRoute {
-    @Serializable
-    data object Splash : AppRoute
 
     @Serializable
     data object Pokedex : AppRoute
+
 }

@@ -21,6 +21,7 @@ fun PokemonLocalModel.toDomain(): PokemonModel =
         id = id,
         name = name,
         imageUrl = imageUrl,
+        isFavorite = isFavorite,
         types = types.split(", "),
         stats = stats.split(", ").map { statInfo ->
             val stat = statInfo.split(";")

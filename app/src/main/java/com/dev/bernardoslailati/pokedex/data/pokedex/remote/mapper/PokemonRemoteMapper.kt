@@ -12,6 +12,7 @@ fun PokemonApiModel.toDomain(): PokemonModel =
     PokemonModel(
         id = this.id.orZero(),
         name = this.name.orEmpty(),
+        isFavorite = false,
         imageUrl = this.sprites?.other?.home?.frontDefault.orEmpty(),
         types = this.types?.mapNotNull { it?.type?.name.orEmpty() }.orEmpty(),
         stats = this.stats?.map { it.toDomain() }.orEmpty(),

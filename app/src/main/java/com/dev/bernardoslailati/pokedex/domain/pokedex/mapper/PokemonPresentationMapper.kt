@@ -22,6 +22,7 @@ fun PokemonModel.toPresentation(): PokemonCardModel {
                 }
             )
         },
+        isFavorite = isFavorite,
         stats = stats
     )
 }

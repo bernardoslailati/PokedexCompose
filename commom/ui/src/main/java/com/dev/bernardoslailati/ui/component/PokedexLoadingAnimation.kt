@@ -1,4 +1,4 @@
-package com.dev.bernardoslailati.pokedex.commom.ui.component
+package com.dev.bernardoslailati.ui.component
 
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.size
@@ -12,7 +12,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.dev.bernardoslailati.pokedex.R
+import com.dev.bernardoslailati.ui.R
 
 @Composable
 fun BoxScope.PokedexLoadingAnimation(modifier: Modifier = Modifier) {
@@ -29,7 +29,9 @@ fun BoxScope.PokedexLoadingAnimation(modifier: Modifier = Modifier) {
     )
 
     LottieAnimation(
-        modifier = modifier.size(96.dp).align(Alignment.Center),
+        modifier = modifier
+            .size(96.dp)
+            .align(Alignment.Center),
         composition = preloaderLottieComposition,
         progress = preloaderProgress,
     )
