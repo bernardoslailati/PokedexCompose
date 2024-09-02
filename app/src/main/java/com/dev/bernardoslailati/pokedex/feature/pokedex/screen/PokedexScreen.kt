@@ -29,6 +29,7 @@ import com.dev.bernardoslailati.pokedex.R
 import com.dev.bernardoslailati.ui.component.PokedexLoadingAnimation
 import com.dev.bernardoslailati.pokedex.domain.pokedex.mapper.toPresentation
 import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonModel
+import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonType
 import com.dev.bernardoslailati.pokedex.feature.pokedex.PokedexEvent
 import com.dev.bernardoslailati.pokedex.feature.pokedex.PokedexEvent.*
 import com.dev.bernardoslailati.pokedex.feature.pokedex.PokedexUiState
@@ -47,6 +48,9 @@ fun PokedexScreen(
         mutableStateOf(false)
     }
     val lazyListState = rememberLazyListState()
+
+    var searchText by remember { mutableStateOf("") }
+    var selectedPokemonTypeFilters = remember { mutableListOf<PokemonType>() }
 
     LaunchedEffect(true) {
         onEvent(OnFetchPokemons)
@@ -83,7 +87,6 @@ fun PokedexScreen(
                                 PokemonListScreen(
                                     modifier = Modifier.padding(vertical = 24.dp),
                                     pokemons = uiState.pokemons.toImmutableList(),
-                                    isSearching = uiState.isLoading,
                                     onSearchPokemons = { searchText, types ->
                                         onEvent(OnSearch(searchText, types))
                                     },
@@ -95,7 +98,14 @@ fun PokedexScreen(
                                     onFavoriteClick = { pokemon ->
                                         onEvent(OnFavoriteChange(pokemon))
                                     },
-
+                                    initialQuery = searchText,
+                                    onQueryChange = {
+                                        searchText = it
+                                    },
+                                    initialPokemonTypeFilters = selectedPokemonTypeFilters,
+                                    onPokemonTypeFiltersChange = {
+                                        selectedPokemonTypeFilters = it.toMutableList()
+                                    },
                                     sharedTransitionScope = this@SharedTransitionLayout,
                                     animatedVisibilityScope = this@AnimatedContent
                                 )

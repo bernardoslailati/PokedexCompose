@@ -13,13 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +35,7 @@ import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonModel
 import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonType
 import com.dev.bernardoslailati.pokedex.feature.pokedex.screen.component.PokemonCard
 import com.dev.bernardoslailati.pokedex.feature.pokedex.screen.component.PokemonSearchBar
+import com.dev.bernardoslailati.pokedex.feature.pokedex.screen.component.PokemonTypeFilters
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -45,7 +44,11 @@ fun PokemonListScreen(
     modifier: Modifier = Modifier,
     lazyListState: LazyListState,
     pokemons: List<PokemonModel>,
-    isSearching: Boolean,
+    initialQuery: String,
+    onQueryChange: (String) -> Unit,
+    initialPokemonTypeFilters: MutableList<PokemonType>,
+    onPokemonTypeFiltersChange: (List<PokemonType>) -> Unit,
+    isSearching: Boolean = false,
     onPokemonClick: (PokemonModel) -> Unit,
     onFavoriteClick: (PokemonModel) -> Unit,
     onSearchPokemons: (String, List<PokemonType>) -> Unit,
@@ -54,7 +57,8 @@ fun PokemonListScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    var searchText by rememberSaveable { mutableStateOf("") }
+    var searchText by remember { mutableStateOf(initialQuery) }
+    val selectedPokemonTypeFilters = remember { initialPokemonTypeFilters }
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -67,8 +71,9 @@ fun PokemonListScreen(
                 .focusRequester(focusRequester),
             query = searchText,
             onQueryChange = {
+                onQueryChange(it)
                 searchText = it
-                onSearchPokemons(searchText, emptyList())
+                onSearchPokemons(searchText, selectedPokemonTypeFilters)
                 if (it.isEmpty()) {
                     coroutineScope.launch {
                         lazyListState.animateScrollToItem(0)
@@ -77,9 +82,24 @@ fun PokemonListScreen(
                 }
             },
             onSearch = {
-                onSearchPokemons(searchText, emptyList())
+                onSearchPokemons(searchText, selectedPokemonTypeFilters)
             },
             active = isSearching
+        )
+        PokemonTypeFilters(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            initiallySelected = initialPokemonTypeFilters,
+            onPokemonTypeFilterSelected = { pokemonType, isSelected ->
+                if (isSelected)
+                    selectedPokemonTypeFilters.add(pokemonType)
+                else
+                    selectedPokemonTypeFilters.remove(pokemonType)
+
+                onPokemonTypeFiltersChange(selectedPokemonTypeFilters)
+                onSearchPokemons(searchText, selectedPokemonTypeFilters)
+            }
         )
         Box(modifier = Modifier.fillMaxSize()) {
             Image(

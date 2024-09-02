@@ -1,5 +1,6 @@
 package com.dev.bernardoslailati.pokedex.feature.pokedex
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -64,10 +65,12 @@ class PokedexViewModel(private val repository: PokedexRepository) : ViewModel() 
     }
 
     private fun searchPokemons(searchText: String, types: List<PokemonType>) {
+        val selectedPokemonTypeFilters = types.map { pokemonType -> pokemonType.type.lowercase() }
+
         uiState = uiState.copy(
-            pokemons = originalPokemonList.fastFilter {
-                it.name.contains(searchText) && it.types.containsAll(
-                    types.map { it.name })
+            pokemons = originalPokemonList.fastFilter { pokemon ->
+                pokemon.name.contains(searchText) &&
+                        pokemon.types.containsAll(selectedPokemonTypeFilters)
             }
         )
     }
