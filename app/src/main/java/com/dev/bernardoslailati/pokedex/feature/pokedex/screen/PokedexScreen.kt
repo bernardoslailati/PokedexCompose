@@ -33,6 +33,7 @@ import com.dev.bernardoslailati.pokedex.feature.pokedex.PokedexEvent
 import com.dev.bernardoslailati.pokedex.feature.pokedex.PokedexEvent.*
 import com.dev.bernardoslailati.pokedex.feature.pokedex.PokedexUiState
 import com.dev.bernardoslailati.pokedex.feature.pokedex.screen.component.FailedToSyncPokemonsTryAgain
+import okhttp3.internal.toImmutableList
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -81,7 +82,11 @@ fun PokedexScreen(
                             if (!targetState) {
                                 PokemonListScreen(
                                     modifier = Modifier.padding(vertical = 24.dp),
-                                    pokemonList = uiState.pokemons,
+                                    pokemons = uiState.pokemons.toImmutableList(),
+                                    isSearching = uiState.isLoading,
+                                    onSearchPokemons = { searchText, types ->
+                                        onEvent(OnSearch(searchText, types))
+                                    },
                                     lazyListState = lazyListState,
                                     onPokemonClick = { pokemon ->
                                         selectedPokemon = pokemon
@@ -90,6 +95,7 @@ fun PokedexScreen(
                                     onFavoriteClick = { pokemon ->
                                         onEvent(OnFavoriteChange(pokemon))
                                     },
+
                                     sharedTransitionScope = this@SharedTransitionLayout,
                                     animatedVisibilityScope = this@AnimatedContent
                                 )
