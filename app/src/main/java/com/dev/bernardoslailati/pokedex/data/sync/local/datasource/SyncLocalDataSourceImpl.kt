@@ -6,7 +6,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
-import com.dev.bernardoslailati.pokedex.data.pokedex.local.database.PokemonDao
 import com.dev.bernardoslailati.pokedex.domain.pokedex.extension.orFalse
 import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonGeneration
 import kotlinx.coroutines.flow.Flow

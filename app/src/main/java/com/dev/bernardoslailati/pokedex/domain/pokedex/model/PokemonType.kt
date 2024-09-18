@@ -3,7 +3,6 @@ package com.dev.bernardoslailati.pokedex.domain.pokedex.model
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.capitalize
 import com.dev.bernardoslailati.pokedex.R
 import java.util.Locale
 

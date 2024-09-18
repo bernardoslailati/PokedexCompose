@@ -44,102 +44,38 @@ fun PokemonListScreen(
     modifier: Modifier = Modifier,
     lazyListState: LazyListState,
     pokemons: List<PokemonModel>,
-    initialQuery: String,
-    onQueryChange: (String) -> Unit,
-    initialPokemonTypeFilters: MutableList<PokemonType>,
-    onPokemonTypeFiltersChange: (List<PokemonType>) -> Unit,
-    isSearching: Boolean = false,
     onPokemonClick: (PokemonModel) -> Unit,
     onFavoriteClick: (PokemonModel) -> Unit,
-    onSearchPokemons: (String, List<PokemonType>) -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    var searchText by remember { mutableStateOf(initialQuery) }
-    val selectedPokemonTypeFilters = remember { initialPokemonTypeFilters }
-
-    val focusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
-
-    Column {
-        PokemonSearchBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .focusRequester(focusRequester),
-            query = searchText,
-            onQueryChange = {
-                onQueryChange(it)
-                searchText = it
-                onSearchPokemons(searchText, selectedPokemonTypeFilters)
-                if (it.isEmpty()) {
-                    coroutineScope.launch {
-                        lazyListState.animateScrollToItem(0)
-                    }
-                    focusManager.clearFocus()
-                }
-            },
-            onSearch = {
-                onSearchPokemons(searchText, selectedPokemonTypeFilters)
-            },
-            active = isSearching
-        )
-        PokemonTypeFilters(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            initiallySelected = initialPokemonTypeFilters,
-            onPokemonTypeFilterSelected = { pokemonType, isSelected ->
-                if (isSelected)
-                    selectedPokemonTypeFilters.add(pokemonType)
-                else
-                    selectedPokemonTypeFilters.remove(pokemonType)
-
-                onPokemonTypeFiltersChange(selectedPokemonTypeFilters)
-                onSearchPokemons(searchText, selectedPokemonTypeFilters)
-            }
-        )
-        Box(modifier = Modifier.fillMaxSize()) {
-            Image(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .blur(1.dp, 1.dp)
-                    .shadow(elevation = 4.dp),
-                painter = painterResource(id = R.drawable.bg_pokedex),
-                contentScale = ContentScale.Crop,
-                contentDescription = "Pokedex Image"
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(top = 16.dp)
+            .padding(horizontal = 8.dp),
+        state = lazyListState,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        items(items = pokemons, key = { it.id }) { pokemon ->
+            PokemonCard(
+                pokemon = pokemon.toPresentation(),
+                onPokemonClick = {
+                    onPokemonClick(pokemon)
+                },
+                onFavoriteClick = {
+                    if (!pokemon.isFavorite)
+                        coroutineScope.launch {
+                            lazyListState.animateScrollToItem(0)
+                        }
+                    onFavoriteClick(pokemon)
+                },
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = animatedVisibilityScope
             )
-            LazyColumn(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(top = 16.dp)
-                    .padding(horizontal = 8.dp),
-                state = lazyListState,
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                items(items = pokemons, key = { it.id }) { pokemon ->
-                    PokemonCard(
-                        pokemon = pokemon.toPresentation(),
-                        onPokemonClick = {
-                            onPokemonClick(pokemon)
-                        },
-                        onFavoriteClick = {
-                            if (!pokemon.isFavorite)
-                                coroutineScope.launch {
-                                    lazyListState.animateScrollToItem(0)
-                                }
-                            searchText = ""
-                            focusManager.clearFocus()
-                            onFavoriteClick(pokemon)
-                        },
-                        sharedTransitionScope = sharedTransitionScope,
-                        animatedVisibilityScope = animatedVisibilityScope
-                    )
-                }
-            }
         }
     }
 }
