@@ -16,13 +16,13 @@ class PokedexApiService(private val httpClient: HttpClient) {
 
     suspend fun fetchPokemon(id: Int): PokemonApiModel? = try {
         httpClient.get("$BASE_URL/$id").body<PokemonApiModel>()
-    } catch (e: UnresolvedAddressException) {
+    } catch (_: UnresolvedAddressException) {
         null
-    } catch (e: ResponseException) {
+    } catch (_: ResponseException) {
         null
-    } catch (e: ConnectException) {
+    } catch (_: ConnectException) {
         null
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         null
     }
 

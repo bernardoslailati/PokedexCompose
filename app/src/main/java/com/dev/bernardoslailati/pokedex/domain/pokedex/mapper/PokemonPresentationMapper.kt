@@ -10,7 +10,7 @@ import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonType
 @Stable
 fun PokemonModel.toPresentation(): PokemonCardModel {
     return PokemonCardModel(
-        id = "#${id.toString().padStart(3, '0')}",
+        id = formatId(id = id),
         name = name,
         imageUrl = imageUrl,
         types = types.map { typeString ->
@@ -26,5 +26,7 @@ fun PokemonModel.toPresentation(): PokemonCardModel {
         stats = stats
     )
 }
+
+private fun formatId(id: Int): String = "#${id.toString().padStart(3, '0')}"
 
 fun List<PokemonLocalModel>.toDomainList(): List<PokemonModel> = this.map { it.toDomain() }

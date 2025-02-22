@@ -14,7 +14,7 @@ class PokedexLocalDataSourceImpl(
     }
 
     override suspend fun getByGeneration(generation: PokemonGeneration): Flow<List<PokemonLocalModel>> {
-        return pokemonDao.loadAllByIds(generation.rangeIds().toList().toIntArray())
+        return pokemonDao.loadAllByIds(generation.rangeIds.toList().toIntArray())
     }
 
     override suspend fun savePokemon(pokemon: PokemonLocalModel) {

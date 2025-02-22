@@ -11,17 +11,19 @@ import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonGeneration
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+private const val POKEDEX_SETTINGS_DATA_STORE_NAME = "pokedex_settings"
+
 class SyncLocalDataSourceImpl(
     private val context: Context
 ) : SyncLocalDataSource {
 
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "pokedex_settings")
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = POKEDEX_SETTINGS_DATA_STORE_NAME)
 
     override suspend fun hasToSyncPokemons(generation: PokemonGeneration): Flow<Boolean> {
-        val isSyncGeneration1PokemonsKey = booleanPreferencesKey(generation.isSyncGenerationKey)
+        val isSyncFirstGenerationPokemonsKey = booleanPreferencesKey(generation.isSyncGenerationKey)
 
         return context.dataStore.data.map { preferences ->
-            preferences[isSyncGeneration1PokemonsKey].orFalse()
+            preferences[isSyncFirstGenerationPokemonsKey].orFalse()
         }
     }
 

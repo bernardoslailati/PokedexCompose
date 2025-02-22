@@ -1,6 +1,5 @@
 package com.dev.bernardoslailati.pokedex.feature.pokedex.screen.component
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
@@ -14,7 +13,6 @@ fun PokemonTypeFilters(
     initialSelectedTypes: List<PokemonType> = emptyList(),
     onPokemonTypeFilterSelected: (PokemonType, isSelected: Boolean) -> Unit
 ) {
-    Log.d("OPAOPA", "loading filters... initialSelectedTypes: $initialSelectedTypes")
     LazyRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp)

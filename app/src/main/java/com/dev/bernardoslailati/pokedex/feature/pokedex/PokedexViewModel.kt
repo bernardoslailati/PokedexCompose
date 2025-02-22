@@ -15,6 +15,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
+private const val VERIFY_IF_SYNC_IS_FAILED_TIMEOUT = 5_000
+
 class PokedexViewModel(private val repository: PokedexRepository) : ViewModel() {
 
     var uiState: PokedexUiState by mutableStateOf(PokedexUiState())
@@ -35,7 +37,7 @@ class PokedexViewModel(private val repository: PokedexRepository) : ViewModel() 
 
     fun onEvent(event: PokedexEvent) {
         when (event) {
-            OnFetchPokemons -> fetchPokemons()
+            is OnFetchPokemons -> fetchPokemons()
             is OnFavoriteChange -> favoriteChange(pokemon = event.pokemon)
             is OnSearch -> searchPokemons(searchText = event.searchText, types = event.types)
         }
@@ -81,14 +83,10 @@ class PokedexViewModel(private val repository: PokedexRepository) : ViewModel() 
 
     private fun List<PokemonModel>.isReadyToShow(generation: PokemonGeneration): Boolean {
         val pokemonIdsList = this.map { it.id }
-        val generationIdsList = generation.rangeIds().toList()
+        val generationIdsList = generation.rangeIds.toList()
 
         return pokemonIdsList.containsAll(generationIdsList) || pokemonIdsList.containsAll(
             generationIdsList.take(5)
         )
-    }
-
-    companion object {
-        const val VERIFY_IF_SYNC_IS_FAILED_TIMEOUT = 5_000
     }
 }

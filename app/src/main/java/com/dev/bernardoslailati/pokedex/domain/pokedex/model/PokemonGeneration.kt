@@ -7,6 +7,6 @@ enum class PokemonGeneration(val from: Int, val to: Int, val isSyncGenerationKey
     /**
      * An int range of all specific generation`s pokemons ids (i.e. Generation 1 -> IntRange(1..151)).
      */
-    fun rangeIds(): IntRange = from..to
+    val rangeIds: IntRange = from..to
 
 }
