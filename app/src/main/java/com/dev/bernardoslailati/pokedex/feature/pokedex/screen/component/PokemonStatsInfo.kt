@@ -13,6 +13,8 @@ import com.dev.bernardoslailati.pokedex.domain.pokedex.model.HP_STAT_NAME
 import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonCardModel
 import com.dev.bernardoslailati.pokedex.domain.pokedex.model.SPEED_STAT_NAME
 
+private const val  MAX_STAT_VALUE = 150f
+
 @Composable
 fun PokemonStatsInfo(modifier: Modifier = Modifier, pokemon: PokemonCardModel) {
     val hpStatColor = Color(0xFF3DDC84)
@@ -27,25 +29,25 @@ fun PokemonStatsInfo(modifier: Modifier = Modifier, pokemon: PokemonCardModel) {
         PokemonStatInfo(
             statName = HP_STAT_NAME,
             color = hpStatColor,
-            progress = pokemon.hp / 100.toFloat(),
+            progress = pokemon.hp / MAX_STAT_VALUE,
             label = pokemon.getHpText()
         )
         PokemonStatInfo(
             statName = ATTACK_STAT_NAME,
             color = attackStatColor,
-            progress = pokemon.attack / 100.toFloat(),
+            progress = pokemon.attack / MAX_STAT_VALUE,
             label = pokemon.getAttackText()
         )
         PokemonStatInfo(
             statName = DEFENSE_STAT_NAME,
             color = defenseStatColor,
-            progress = pokemon.defense / 100.toFloat(),
+            progress = pokemon.defense / MAX_STAT_VALUE,
             label = pokemon.getDefenseText()
         )
         PokemonStatInfo(
             statName = SPEED_STAT_NAME,
             color = speedStatColor,
-            progress = pokemon.speed / 100.toFloat(),
+            progress = pokemon.speed / MAX_STAT_VALUE,
             label = pokemon.getSpeedText()
         )
     }

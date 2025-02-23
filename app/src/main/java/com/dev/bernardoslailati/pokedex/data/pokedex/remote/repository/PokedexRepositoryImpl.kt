@@ -4,13 +4,12 @@ import com.dev.bernardoslailati.pokedex.data.pokedex.local.datasource.PokedexLoc
 import com.dev.bernardoslailati.pokedex.data.pokedex.local.mapper.toLocal
 import com.dev.bernardoslailati.pokedex.data.pokedex.remote.datasource.PokedexRemoteDataSource
 import com.dev.bernardoslailati.pokedex.data.sync.local.datasource.SyncLocalDataSource
-import com.dev.bernardoslailati.pokedex.domain.pokedex.mapper.toDomainList
+import com.dev.bernardoslailati.pokedex.data.pokedex.remote.mapper.toDomainList
 import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonGeneration
 import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonModel
 import com.dev.bernardoslailati.pokedex.domain.pokedex.repository.PokedexRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
@@ -33,26 +32,21 @@ class PokedexRepositoryImpl(
             val generationPokemonIdsList = generation.rangeIds.toList()
 
 
-            loopWhile@ while (localPokemonsIds.containsAll(generationPokemonIdsList).not()) {
-                val remainingPokemonIds = generationPokemonIdsList.subtract(localPokemonsIds)
+            val remainingPokemonIds = generationPokemonIdsList.subtract(localPokemonsIds)
 
-                loop@ for (remainingPokemonId in remainingPokemonIds) {
-                    val remotePokemon = remoteDataSource.fetchPokemon(remainingPokemonId)
+            remainingPokemonIds.forEach { remainingPokemonId ->
+                val remotePokemon = remoteDataSource.fetchPokemon(remainingPokemonId)
 
-                    val localPokemon = remotePokemon?.toLocal()
-                    localPokemon?.let {
-                        localPokemons.add(localPokemon)
-                        localDataSource.savePokemon(localPokemon)
-                    }
+                val localPokemon = remotePokemon?.toLocal()
+                localPokemon?.let {
+                    localPokemons.add(localPokemon)
+                    localDataSource.savePokemon(localPokemon)
                 }
+            }
 
-                val updatedLocalPokemonsIds = localPokemons.map { pokemon -> pokemon.id }
-                if (updatedLocalPokemonsIds.containsAll(generationPokemonIdsList)) {
-                    syncLocalDataSource.confirmPokemonsSync(generation = PokemonGeneration.FIRST)
-                    break@loopWhile
-                }
-
-                delay(timeMillis = TRY_AGAIN_SYNC_DELAY_TIME)
+            val updatedLocalPokemonsIds = localPokemons.map { pokemon -> pokemon.id }
+            if (updatedLocalPokemonsIds.containsAll(generationPokemonIdsList)) {
+                syncLocalDataSource.confirmPokemonsSync(generation = PokemonGeneration.FIRST)
             }
         }
 
@@ -66,8 +60,7 @@ class PokedexRepositoryImpl(
 
     override suspend fun favoriteChange(pokemon: PokemonModel) {
         withContext(ioDispatcher) {
-            val targetPokemonLocal =
-                localDataSource.getPokemonById(pokemon.id)
+            val targetPokemonLocal = localDataSource.getPokemonById(pokemon.id)
 
             targetPokemonLocal?.let {
                 localDataSource.updatePokemon(targetPokemonLocal.copy(isFavorite = !targetPokemonLocal.isFavorite))

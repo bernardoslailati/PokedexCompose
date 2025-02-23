@@ -6,10 +6,10 @@ const val HP_STAT_NAME = "hp"
 const val ATTACK_STAT_NAME = "attack"
 const val DEFENSE_STAT_NAME = "defense"
 const val SPEED_STAT_NAME = "speed"
-const val MAX_HP = 300
-const val MAX_ATTACK = 300
-const val MAX_DEFENSE = 300
-const val MAX_SPEED = 300
+const val MAX_HP = 150
+const val MAX_ATTACK = 150
+const val MAX_DEFENSE = 150
+const val MAX_SPEED = 150
 
 @Immutable
 data class PokemonCardModel(

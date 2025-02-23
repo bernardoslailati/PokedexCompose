@@ -7,13 +7,13 @@ import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonModel
 import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonStatModel
 import com.dev.bernardoslailati.pokedex.domain.pokedex.model.PokemonStatsModel
 
-fun PokemonApiModel.toLocal(): PokemonLocalModel =
+fun PokemonModel.toLocal(): PokemonLocalModel =
     PokemonLocalModel(
-        id = id ?: 0,
-        name = name.orEmpty(),
-        imageUrl = sprites?.other?.home?.frontDefault.orEmpty(),
-        types = types?.joinToString { it?.type?.name.orEmpty() }.orEmpty(),
-        stats = stats.orEmpty().joinToString { it?.baseStat.toString() + ";" + it?.stat?.name }
+        id = id,
+        name = name,
+        imageUrl = imageUrl,
+        types = types.joinToString(),
+        stats = stats.joinToString { stat -> stat.baseStat.toString() + ";" + stat.stat.name }
     )
 
 fun PokemonLocalModel.toDomain(): PokemonModel =

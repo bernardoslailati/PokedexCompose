@@ -1,4 +1,4 @@
-package com.dev.bernardoslailati.pokedex.domain.pokedex.mapper
+package com.dev.bernardoslailati.pokedex.data.pokedex.remote.mapper
 
 import androidx.compose.runtime.Stable
 import com.dev.bernardoslailati.pokedex.data.pokedex.local.mapper.toDomain
